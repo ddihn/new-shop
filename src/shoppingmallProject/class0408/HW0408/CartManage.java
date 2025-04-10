@@ -4,74 +4,128 @@ public class CartManage {
 
 	CartItem[] cart = new CartItem[Config.MAX_PRODUCT_CNT];
 	int cartItemCnt = 0;
-	int quantity;
 
 	public void selectProduct() {
+		Config.productManager.printAllProduct();
 
-		System.out.println("[ 안내 ] 장바구니에 담을 상품 번호와 개수를 입력해주세요.");
-		System.out.print("상품 번호 >> ");
-		// TODO: 상품 번호 체크 로직부분도 함수화?
-		int selectedProductId = Config.scanner.nextInt();
-		System.out.print("상품 개수 >> ");
-		quantity = Config.scanner.nextInt();
-		cart[cartItemCnt] = new CartItem();
-		cart[cartItemCnt].quantity = quantity;
-		addItemToCart(selectedProductId);
-	}
+		while (true) {
+			System.out.println("[ 안내 ] 장바구니에 담을 상품 번호와 개수를 입력해주세요. ( 그만 담으려면 0 입력 )");
+			System.out.print("상품 번호 >> ");
+			int selectedProductId = Config.scanner.nextInt();
 
-	public void addItemToCart(int selectedProductId) {
-		int idxId = selectedProductId - 1;
-		if (idxId < 0 || idxId > Config.productCnt) {
-			System.out.println("[ 실패 ] 유효한 상품 번호가 아닙니다.");
-		} else {
-			cart[cartItemCnt].product = Config.productManager.product[idxId];
-			cartItemCnt++;
-			System.out.println(
-					"[ 성공 ] " + Config.productManager.product[idxId].productName + " " + quantity + "개를 장바구니에 담았습니다.");
+			if (selectedProductId == 0) {
+				System.out.println("[ 안내 ] 상품 담기를 종료합니다.");
+				return;
+			}
+
+			if (!isValidProductId(selectedProductId)) {
+				System.out.println("[ 실패 ] 유효한 상품 번호가 아닙니다.");
+				continue;
+			}
+
+			System.out.print("상품 개수 >> ");
+			int quantity = Config.scanner.nextInt();
+
+			sumDuplicateProduct(selectedProductId, quantity);
 		}
 	}
 
-	public void printCartItem() {
-		int cartTotalPrice = 0;
-		System.out.println("[ 안내 ] 장바구니에 담긴 상품을 출력합니다.\n");
-		System.out.println("------------------------------------------------------------");
-		System.out.println("[상품 번호]\t[상품명]\t\t[개수]\t\t[총 가격]");
-		System.out.println("------------------------------------------------------------");
+	public boolean isValidProductId(int productId) {
+		return productId > 0 && productId <= Config.productCnt;
+	}
+
+	public void sumDuplicateProduct(int productId, int quantity) {
+		int idxId = productId - 1;
 		for (int i = 0; i < cartItemCnt; i++) {
-			System.out.println("[" + (cart[i].product.productId + 1) + "]\t\t" + cart[i].product.productName + "\t\t"
-					+ cart[i].quantity + "개\t\t" + Config.cart.cart[i].totalPrice + "원");
-			cartTotalPrice += Config.cart.cart[i].totalPrice;
-			System.out.println("------------------------------------------------------------");
+			if (cart[i].product.productId == idxId) {
+				cart[i].quantity += quantity;
+				cart[i].calcTotalPrice();
+				System.out.println("[ 안내 ] " + Config.productManager.product[idxId].productName + " " + quantity
+						+ "개를 장바구니에 담았습니다.\n");
+				return;
+			}
 		}
-		System.out.println("예상 결제액: " + cartTotalPrice);
+		addItemToCart(productId, quantity);
+	}
+
+	public void addItemToCart(int selectedProductId, int quantity) {
+		int idxId = selectedProductId - 1;
+
+		cart[cartItemCnt] = new CartItem();
+		cart[cartItemCnt].product = Config.productManager.product[idxId];
+		cart[cartItemCnt].quantity = quantity;
+		cart[cartItemCnt].calcTotalPrice();
+		cartItemCnt++;
+
+		System.out.println(
+				"[ 성공 ] " + Config.productManager.product[idxId].productName + " " + quantity + "개를 장바구니에 담았습니다.\n");
 	}
 
 	public void orderCartItem() {
-		// TODO: 성공하면 장바구니를 비워야 함
 		System.out.println("--------------------------< 상품 구매 >--------------------------");
-		System.out.println("[ 안내 ] 장바구니에 담긴 상품들을 구매합니다.");
 		printCartItem();
+
 		while (true) {
-			System.out.println("구매창으로 이동할까요? (y : 이동 /n : 선택 화면 복귀)");
+			System.out.println("\n구매창으로 이동할까요? ( y : 이동 / n : 선택 화면 복귀 )");
 			System.out.print(">> ");
 			String answer = Config.scanner.next();
 
 			if (answer.equals("y")) {
-//				Order order = new Order();
-				System.out.println("[ 성공 ] 상품 구매가 완료되었습니다.");
-				return;
+				Order order = new Order();
 
+				order.getShippingInfo();
+				order.checkRightShippingInfo();
+
+				System.out.println("[ 성공 ] 상품 구매가 완료되었습니다.");
+				Config.cart.clearCart();
+				return;
 			} else if (answer.equals("n")) {
 				System.out.println("[ 성공 ] 상품을 구매하지 않습니다. 선택 화면으로 복귀합니다.");
 				return;
-
 			} else {
-				System.out.println("[ 실패 ] 잘못된 입력입니다. 다시 입력해주세요.(y/n)");
+				System.out.println("[ 실패 ] 잘못된 입력입니다. 다시 입력해주세요. ( y / n 중 입력)");
 			}
 		}
-
 	}
 
-	// TODO: 장바구니의 내용 변경 ( 개수 빼는 대로 장바구니에서 빼주고 개수 넘게 빼면 다뺀다고 해주고 )
+	public void printCartItem() {
+		if (checkCartEmpty())
+			return;
+
+		int cartTotalPrice = 0;
+
+		System.out.println("[ 안내 ] 장바구니에 담긴 상품을 출력합니다.\n");
+		printLine();
+		System.out.println("[상품 번호]\t[상품명]\t\t[개수]\t\t[총 가격]");
+		printLine();
+
+		for (int i = 0; i < cartItemCnt; i++) {
+			System.out.println("[" + (cart[i].product.productId + 1) + "]\t\t" + cart[i].product.productName + "\t\t"
+					+ cart[i].quantity + "개\t\t" + cart[i].totalPrice + "원");
+			cartTotalPrice += cart[i].totalPrice;
+		}
+
+		printLine();
+		System.out.println("예상 결제액: " + cartTotalPrice + "원");
+	}
+
+	public void clearCart() {
+		for (int i = 0; i < cartItemCnt; i++) {
+			cart[i] = null;
+		}
+		cartItemCnt = 0;
+	}
+
+	public boolean checkCartEmpty() {
+		if (Config.cart.cartItemCnt == 0) {
+			System.out.println("[ 안내 ] 장바구니에 상품이 없습니다.");
+			return true;
+		}
+		return false;
+	}
+
+	public void printLine() {
+		System.out.println("----------------------------------------------------------------");
+	}
 
 }
