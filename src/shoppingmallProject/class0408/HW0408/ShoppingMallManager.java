@@ -17,7 +17,7 @@ public class ShoppingMallManager {
 	}
 
 	public String getUserData() {
-
+		greeting();
 		System.out.println("[ 직원 ◟(∗❛ᴗ❛∗)◞ ] 어서오세요! 성함을 알려주시면 쇼핑몰 입장을 도와드리겠습니다.");
 		System.out.print("[ 고객님 ◟( ˘ ³˘)◞ ] ");
 		String name = Config.scanner.nextLine();
@@ -67,4 +67,20 @@ public class ShoppingMallManager {
 			}
 		}
 	}
+
+	public void greeting() {
+
+		final String RESET = "\u001B[0m";
+		final String ORANGE = "\u001B[38;5;226m";
+
+		System.out.println(ORANGE + "*******************************************************");
+		System.out.println("*   __        __   _                                  *");
+		System.out.println("*   \\ \\      / /__| | ___ ___  _ __ ___   ___         *");
+		System.out.println("*    \\ \\ /\\ / / _ \\ |/ __/ _ \\| '_ ` _ \\ / _ \\        *");
+		System.out.println("*     \\ V  V /  __/ | (_| (_) | | | | | |  __/        *");
+		System.out.println("*      \\_/\\_/ \\___|_|\\___\\___/|_| |_| |_|\\___|        *");
+		System.out.println("*                                                     *");
+		System.out.println("*******************************************************" + RESET);
+	}
+
 }
