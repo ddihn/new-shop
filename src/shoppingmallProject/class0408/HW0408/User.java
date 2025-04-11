@@ -30,7 +30,7 @@ public class User {
 				Config.cart.orderCartItem();
 				break;
 			case "5":
-				System.out.print("\n[ 성공 (◍•ᴗ•◍) ] 쇼핑을 종료합니다. " + name + "님, 안녕히 가시고 또 들러주세요!");
+				System.out.print("\n[ 성공 <(_ _)> ] 쇼핑을 종료합니다. " + name + "님, 안녕히 가시고 또 들러주세요!");
 				return;
 			default:
 				System.out.print("\n[ 실패 Σ(￣□￣;) ] 잘못된 입력입니다. 다시 선택해주세요.");

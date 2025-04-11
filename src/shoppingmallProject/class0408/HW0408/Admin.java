@@ -47,23 +47,31 @@ public class Admin {
 		}
 
 		System.out.println("\n--------------------------< 상품 등록 >--------------------------\n");
-		System.out.println(
-				"[ 안내 ] 최대 " + Config.MAX_PRODUCT_CNT + "건의 상품을 등록할 수 있습니다. 현재 등록된 상품 수 : " + Config.productCnt);
+		System.out.println("[ 안내 ] 최대 " + Config.MAX_PRODUCT_CNT + "건의 상품을 등록할 수 있습니다. ( 그만 등록하려면 0 )");
+		while (true) {
 
-		Product newProduct = new Product();
-		Config.scanner.nextLine(); // 버퍼 비우기
+			System.out.println("현재 등록된 상품 수 : " + Config.productCnt);
 
-		System.out.print("상품 이름 : ");
-		newProduct.productName = Config.scanner.nextLine();
+			Product newProduct = new Product();
+			Config.scanner.nextLine(); // 버퍼 비우기
 
-		System.out.print("상품 가격( 원 단위, 숫자만 입력 ) : ");
-		newProduct.price = Config.scanner.nextInt();
+			System.out.print("상품 이름 : ");
+			newProduct.productName = Config.scanner.nextLine();
 
-		newProduct.productId = Config.productCnt;
-		Config.productManager.product[Config.productCnt] = newProduct;
-		Config.productCnt++;
+			if (newProduct.productName.equals("0")) {
+				System.out.println("[ 안내 ] 상품 등록을 중단합니다.");
+				return;
+			}
 
-		System.out.println("\n[ 성공 ] 상품 등록이 완료되었습니다.");
+			System.out.print("상품 가격( 원 단위, 숫자만 입력 ) : ");
+			newProduct.price = Config.scanner.nextInt();
+
+			newProduct.productId = Config.productCnt;
+			Config.productManager.product[Config.productCnt] = newProduct;
+			Config.productCnt++;
+
+			System.out.println("\n[ 성공 ] 상품 등록이 완료되었습니다.");
+		}
 	}
 
 	public void removeProduct() {
