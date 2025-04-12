@@ -7,6 +7,7 @@ public class Order {
 	String address;
 
 	public void getShippingInfo() {
+		Config.scanner.nextLine();
 		System.out.println("------------------------< 배송 정보 입력 >------------------------\n");
 
 		// 주문자 성함
@@ -44,8 +45,19 @@ public class Order {
 	}
 
 	public void printShippingInfo() {
-		System.out.println("주문자 성함 : " + this.orderName);
+		CartManage cart = Config.cart;
+		int cartTotalPrice = 0;
+
+		System.out.println("[ 주문자 정보 ]");
+		System.out.println("성함 : " + this.orderName);
 		System.out.println("연락처 : " + this.phoneNum);
 		System.out.println("배송 주소: " + this.address);
+		System.out.println("\n[ 주문 상품 목록 ]");
+		for (int i = 0; i < cart.cartItemCnt; i++) {
+			System.out.println("[" + (cart.cart[i].product.productId + 1) + "]\t\t" + cart.cart[i].product.productName
+					+ "\t\t" + cart.cart[i].quantity + "개\t\t" + cart.cart[i].totalPrice + "원");
+			cartTotalPrice += cart.cart[i].totalPrice;
+		}
+		System.out.println("\n결제 금액: " + cartTotalPrice);
 	}
 }

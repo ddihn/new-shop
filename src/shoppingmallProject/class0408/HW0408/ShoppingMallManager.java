@@ -74,12 +74,10 @@ public class ShoppingMallManager {
 		final String ORANGE = "\u001B[38;5;226m";
 
 		System.out.println(ORANGE + "*******************************************************");
-		System.out.println("*   __        __   _                                  *");
 		System.out.println("*   \\ \\      / /__| | ___ ___  _ __ ___   ___         *");
 		System.out.println("*    \\ \\ /\\ / / _ \\ |/ __/ _ \\| '_ ` _ \\ / _ \\        *");
 		System.out.println("*     \\ V  V /  __/ | (_| (_) | | | | | |  __/        *");
 		System.out.println("*      \\_/\\_/ \\___|_|\\___\\___/|_| |_| |_|\\___|        *");
-		System.out.println("*                                                     *");
 		System.out.println("*******************************************************" + RESET);
 	}
 

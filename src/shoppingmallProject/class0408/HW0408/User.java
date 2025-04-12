@@ -30,7 +30,8 @@ public class User {
 				Config.cart.orderCartItem();
 				break;
 			case "5":
-				System.out.print("\n[ 성공 <(_ _)> ] 쇼핑을 종료합니다. " + name + "님, 안녕히 가시고 또 들러주세요!");
+				System.out.print("\n[ 성공 <(_ _)> ] 쇼핑을 종료합니다. " + name + "님, 안녕히 가시고 또 들러주세요!\n");
+				adios();
 				return;
 			default:
 				System.out.print("\n[ 실패 Σ(￣□￣;) ] 잘못된 입력입니다. 다시 선택해주세요.");
@@ -38,5 +39,20 @@ public class User {
 			}
 
 		}
+	}
+
+	public void adios() {
+
+		final String RESET = "\u001B[0m";
+		final String CYAN = "\u001B[38;5;51m";
+
+		System.out.println(CYAN + "*******************************************************");
+		System.out.println("*                ____   __   __  ______               *");
+		System.out.println("*               | __ )  \\ \\ / / | ____|               *");
+		System.out.println("*               |  _ \\   \\ \\//  |  _|                 *");
+		System.out.println("*               | |_) |   | |   |  ___                *");
+		System.out.println("*               |____/    |_|   |_____|               *");
+		System.out.println("*******************************************************" + RESET);
+
 	}
 }
